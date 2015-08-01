@@ -1,0 +1,15 @@
+<template name="viewOne<%= humanizedSingularName %>Page">
+
+    <div class="container">
+
+        {{> findOne<%= humanizedSingularName %> <%= camelizedSingularName %>Id=id}}
+
+        <hr>
+        {{> <%= camelizedSingularName %>CreatorControls <%= camelizedSingularName %>Id=id}}
+
+        <hr>
+        {{> findReviews docId=id collectionName="<%= camelizedPluralName %>"}}
+
+    </div>
+
+</template>

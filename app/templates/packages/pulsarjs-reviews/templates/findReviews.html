@@ -1,0 +1,111 @@
+<template name="reviewInFindList">
+
+    <!-- This will be repeated inside of the find this -->
+     {{> findOneReview }}
+
+
+</template>
+
+
+<template name="findReviews">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h3>
+                Reviews
+            </h3>
+        </div>
+    </div>
+
+    {{> insertReviewButton}}
+    {{#if anyReviews}}
+    <div class="row">
+
+        {{#unless transactionMode}}
+        <div class="col-md-12">
+            <br>
+            <div class="btn-group btn-group-justified">
+                <a id="highest" class="btn btn-primary {{isDisabled 'highest'}}">Highest</a>
+                <a id="lowest" class="btn btn-primary {{isDisabled 'lowest'}}">Lowest</a>
+                <a id="newest" class="btn btn-primary {{isDisabled 'newest'}}">Newest</a>
+            </div>
+            <br>
+        </div>
+
+        <div class="col-md-12">
+          {{> reviews }}
+        </div>
+
+
+        {{/unless}}
+
+        {{#if transactionMode}}
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    {{#with creatorReview}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading text-center"><h4>Seller</h4></div>
+                            <div class="panel-body">
+                                {{> findOneReview }}
+                            </div>
+                    </div>
+                    {{/with}}
+                    {{#unless creatorReview}}
+                        <div class="well well-sm">
+                            <p>
+                                Seller has not submitted a review.
+                            </p>
+                        </div>
+
+                    {{/unless}}
+                </div>
+                <div class="col-md-6">
+                    {{#with buyerReview}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading text-center">
+                            <h4>Buyer</h4>
+                        </div>
+                        <div class="panel-body">
+                            {{> findOneReview }}
+                        </div>
+                    </div>
+                    {{/with}}
+                    {{#unless buyerReview}}
+                        <div class="well">
+                            <p>
+                                Buyer has not submitted a review.
+                            </p>
+                        </div>
+
+                    {{/unless}}
+                </div>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+
+
+
+
+</template>
+
+<template name="reviews">
+    {{> pages}}
+</template>
+
+<template name="transactionModeReviews">
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Reviews
+            </h3>
+        </div>
+    </div>
+
+    <div class="row">
+
+    </div>
+
+</template>
