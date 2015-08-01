@@ -2,6 +2,7 @@
 
 # Usage
 `yo pulsarjs` - Initialize empty pulsar project
+
 `yo pulsarjs:collection Name` - Initialize collection files for **Name**
 
 ## Updating
