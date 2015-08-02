@@ -5,11 +5,55 @@ var inflections = require('underscore.inflections'),
     yeoman = require('yeoman-generator'),
     mkdirp = require('mkdirp'),
     _ = require('underscore'),
-    globby = require('globby');
+    globby = require('globby'),
+    replace = require('replace'),
+    githubdownload = require('github-download');
 
 
 var ModuleGenerator = yeoman.generators.NamedBase.extend({
         init: function() {
+          var sourceRoot = this.sourceRoot();
+          var done = this.async();
+
+          githubdownload("https://github.com/isomer-io/pulsarjs.git#master", this.sourceRoot()).on('end', function(){
+            replace({
+              regex: "Posts",
+              replacement: "<%= humanizedPluralName %>",
+              paths: [sourceRoot],
+              recursive: true,
+              silent:true
+            });
+
+            replace({
+              regex: "posts",
+              replacement: "<%= camelizedPluralName %>",
+              paths: [sourceRoot],
+              recursive: true,
+              silent:true
+            });
+
+            replace({
+              regex: "Post",
+              replacement: "<%= humanizedSingularName %>",
+              paths: [sourceRoot],
+              recursive: true,
+              silent:true
+            });
+
+            replace({
+              regex: "post",
+              replacement: "<%= camelizedSingularName %>",
+              paths: [sourceRoot],
+              recursive: true,
+              silent:true
+            });
+
+            done();
+          })
+          .on('error',function(err){
+            console.error(err);
+          });
+
             this.slugifiedName = _.slugify(this.name);
 
             this.slugifiedPluralName = inflections.pluralize(this.slugifiedName);
@@ -32,9 +76,10 @@ var ModuleGenerator = yeoman.generators.NamedBase.extend({
             // };
         },
         renderModule: function(){
+
           var generator = this;
 
-          globby(generator.sourceRoot() + "/**/{*.js,*.html,*.css}",function(err,files){
+          globby(generator.sourceRoot() + "/collections/posts/**/{*.js,*.html,*.css}",function(err,files){
             for(var i = 0; i < files.length; i++){
               files[i] = files[i].replace(generator.sourceRoot() + "/","");
 
@@ -42,8 +87,6 @@ var ModuleGenerator = yeoman.generators.NamedBase.extend({
                 .replace(/posts/g,generator.camelizedPluralName)
                 .replace(/Post/g,generator.humanizedSingularName)
                 .replace(/post/g,generator.camelizedSingularName);
-
-              console.log(fileName);
 
               generator.template(files[i],fileName);
             }

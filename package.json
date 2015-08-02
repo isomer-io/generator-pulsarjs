@@ -2,7 +2,7 @@
   "name": "generator-pulsarjs",
   "version": "1.0.1",
   "description": "A Meteor-based scaffolding for full stack web apps",
-  "main": "script.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,7 +27,8 @@
     "underscore": "^1.8.3",
     "underscore.inflections": "^0.2.1",
     "underscore.string": "^3.1.1",
-    "unzip": "^0.1.11"
+    "unzip": "^0.1.11",
+    "yeoman-generator": "^0.20.2"
   },
   "files": [
     "app",
