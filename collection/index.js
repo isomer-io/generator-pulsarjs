@@ -79,7 +79,7 @@ var ModuleGenerator = yeoman.generators.NamedBase.extend({
 
           var generator = this;
 
-          globby(generator.sourceRoot() + "/collections/posts/**/{*.js,*.html,*.css}",function(err,files){
+          globby(generator.sourceRoot() + "{/collections/posts/,/pages/postCollectionPages/}**/{*.js,*.html,*.css}",function(err,files){
             for(var i = 0; i < files.length; i++){
               files[i] = files[i].replace(generator.sourceRoot() + "/","");
 
