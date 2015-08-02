@@ -15,7 +15,9 @@ var launchGenerator = yeoman.Base.extend({
     copyBoilerplate: function() {
         this.directory('.meteor','.meteor');
         this.directory('collections/users','collections/users');
-        this.directory('pages','pages');
+        this.directory('pages/homePage','pages/homePage');
+        this.directory('pages/logInPage','pages/logInPage');
+        this.directory('pages/profilePage','pages/profilePage');
     }
 });
 
