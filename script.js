@@ -96,17 +96,9 @@ var main = function(){
   });
 };
 
-fs.exists(ghDir, function(exists){
-  if(exists){
-    console.log("Pulsar already downloaded...removing and redownloading");
-
-    rimraf(ghDir,function(err){
-      if(err){
-        console.error(err);
-      }
-      main();
-    });
-  } else {
-    main();
+rimraf(ghDir,function(err){
+  if(err){
+    console.error(err);
   }
+  main();
 });
