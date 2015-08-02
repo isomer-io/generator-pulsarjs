@@ -4,8 +4,9 @@ var yeoman = require('yeoman-generator'),
 var launchGenerator = yeoman.Base.extend({
     initializing:function(){
       var sourceRoot = this.sourceRoot();
+      var done = this.async();
       githubdownload("https://github.com/isomer-io/pulsarjs.git#master", this.sourceRoot()).on('end', function(){
-
+        done();
       })
       .on('error',function(err){
         console.error(err);
