@@ -1,6 +1,6 @@
 {
   "name": "generator-pulsarjs",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "A Meteor-based scaffolding for full stack web apps",
   "main": "app/index.js",
   "scripts": {
