@@ -10,67 +10,92 @@ var inflections = require('underscore.inflections'),
     githubdownload = require('github-download');
 
 
+var replaceText = function(sourceRoot){
+  replace({
+    regex: "Posts",
+    replacement: "<%= humanizedPluralName %>",
+    paths: [sourceRoot],
+    recursive: true,
+    silent:true
+  });
+
+  replace({
+    regex: "posts",
+    replacement: "<%= camelizedPluralName %>",
+    paths: [sourceRoot],
+    recursive: true,
+    silent:true
+  });
+
+  replace({
+    regex: "Post",
+    replacement: "<%= humanizedSingularName %>",
+    paths: [sourceRoot],
+    recursive: true,
+    silent:true
+  });
+
+  replace({
+    regex: "post",
+    replacement: "<%= camelizedSingularName %>",
+    paths: [sourceRoot],
+    recursive: true,
+    silent:true
+  });
+}
+
 var ModuleGenerator = yeoman.generators.NamedBase.extend({
         init: function() {
           var sourceRoot = this.sourceRoot();
-          var done = this.async();
 
           var release = "v0.1.1-beta";
 
-          githubdownload("https://github.com/isomer-io/pulsarjs/tree/" + release, this.sourceRoot() +
-          '/' + release).on('end', function(){
-            console.log('test');
-            replace({
-              regex: "Posts",
-              replacement: "<%= humanizedPluralName %>",
-              paths: [sourceRoot],
-              recursive: true,
-              silent:true
+          var generator = this;
+
+          generator.log(yosay("Using pulsarjs release " + release));
+
+          var mkdirpDone = generator.async();
+
+          mkdirp(generator.sourceRoot() + '/' + release, function(err){
+            if(err){
+              if(err.code === "ENOTEMPTY"){
+                generator.log('Looks like you already have release ' + release + '...proceeding');
+              } else {
+                generator.env.error("Unexpected error creating release directory");
+              }
+            } else {
+              generator.log('Created release directory');
+            }
+
+            var ghDone = generator.async();
+            githubdownload("https://github.com/isomer-io/pulsarjs/tree/" + release, generator.sourceRoot() + '/' + release).on('end', function(){
+              generator.log('repo downloaded to ' + generator.sourceRoot() + '/' + release);
+
+              replaceText(sourceRoot);
+
+              ghDone();
+            })
+
+            .on('error',function(err){
+              console.error(err);
             });
 
-            replace({
-              regex: "posts",
-              replacement: "<%= camelizedPluralName %>",
-              paths: [sourceRoot],
-              recursive: true,
-              silent:true
-            });
-
-            replace({
-              regex: "Post",
-              replacement: "<%= humanizedSingularName %>",
-              paths: [sourceRoot],
-              recursive: true,
-              silent:true
-            });
-
-            replace({
-              regex: "post",
-              replacement: "<%= camelizedSingularName %>",
-              paths: [sourceRoot],
-              recursive: true,
-              silent:true
-            });
-
-            done();
-          })
-          .on('error',function(err){
-            console.error(err);
+            mkdirpDone();
           });
 
-            this.slugifiedName = _.slugify(this.name);
+          this.slugifiedName = _.slugify(this.name);
 
-            this.slugifiedPluralName = inflections.pluralize(this.slugifiedName);
-            this.slugifiedSingularName = inflections.singularize(this.slugifiedName);
+          this.slugifiedPluralName = inflections.pluralize(this.slugifiedName);
+          this.slugifiedSingularName = inflections.singularize(this.slugifiedName);
 
-            this.camelizedPluralName = _.camelize(this.slugifiedPluralName);
-            this.camelizedSingularName = _.camelize(this.slugifiedSingularName);
+          this.camelizedPluralName = _.camelize(this.slugifiedPluralName);
+          this.camelizedSingularName = _.camelize(this.slugifiedSingularName);
 
-            this.classifiedPluralName = _.classify(this.slugifiedPluralName);
-            this.classifiedSingularName = _.classify(this.slugifiedSingularName);
+          this.classifiedPluralName = _.classify(this.slugifiedPluralName);
+          this.classifiedSingularName = _.classify(this.slugifiedSingularName);
 
-            this.humanizedPluralName = _.humanize(this.slugifiedPluralName);
-            this.humanizedSingularName = _.humanize(this.slugifiedSingularName);
+          this.humanizedPluralName = _.humanize(this.slugifiedPluralName);
+          this.humanizedSingularName = _.humanize(this.slugifiedSingularName);
 
             // this.replaceObject = {
             //   post: this.camelizedSingularName,
