@@ -15,7 +15,11 @@ var ModuleGenerator = yeoman.generators.NamedBase.extend({
           var sourceRoot = this.sourceRoot();
           var done = this.async();
 
-          githubdownload("https://github.com/isomer-io/pulsarjs.git#master", this.sourceRoot()).on('end', function(){
+          var release = "v0.1.1-beta";
+
+          githubdownload("https://github.com/isomer-io/pulsarjs/tree/" + release, this.sourceRoot() +
+          '/' + release).on('end', function(){
+            console.log('test');
             replace({
               regex: "Posts",
               replacement: "<%= humanizedPluralName %>",
