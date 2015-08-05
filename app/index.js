@@ -5,39 +5,16 @@ var yeoman = require('yeoman-generator'),
 
 var launchGenerator = yeoman.Base.extend({
     initializing:function(){
-      var sourceRoot = this.sourceRoot();
-
-      var release = "v0.1.1-beta";
-
       var generator = this;
+      var ghDone = generator.async();
+      githubdownload("https://github.com/isomer-io/pulsarjs/", generator.sourceRoot()).on('end', function(){
+        generator.log('repo downloaded to ' + generator.sourceRoot());
 
-      generator.log(yosay("Using pulsarjs release " + release));
+        ghDone();
+      })
 
-      var mkdirpDone = generator.async();
-
-      mkdirp(generator.sourceRoot() + '/' + release, function(err){
-        if(err){
-          if(err.code === "ENOTEMPTY"){
-            generator.log('Looks like you already have release ' + release + '...proceeding');
-          } else {
-            generator.env.error("Unexpected error creating release directory");
-          }
-        } else {
-          generator.log('Created release directory');
-        }
-
-        var ghDone = generator.async();
-        githubdownload("https://github.com/isomer-io/pulsarjs/tree/" + release, generator.sourceRoot() + '/' + release).on('end', function(){
-          generator.log('repo downloaded to ' + generator.sourceRoot() + '/' + release);
-
-          ghDone();
-        })
-
-        .on('error',function(err){
-          console.error(err);
-        });
-
-        mkdirpDone();
+      .on('error',function(err){
+        console.error(err);
       });
     },
     copyBoilerplate: function() {
